@@ -15,8 +15,8 @@ The solution already contains four projects:
 
 - **BlazingPizza.Client**: This is the Blazor project. It contains the UI components for the app.
 - **BlazingPizza.Server**: This is the ASP.NET Core project hosting the Blazor app and also the backend services for the app.
-- **BlazingPizza.Shared**: Shared model types for the app.
-- **BlazingPizza.ComponentsLibrary**: A library of components and helper code to be used by the app in later sessions.
+- **BlazingPizza.Shared**: This project contains the shared model types for the app.
+- **BlazingPizza.ComponentsLibrary**: This is a library of components and helper code to be used by the app in later sessions.
 
 The **BlazingPizza.Server** project should be set as the startup project.
 
@@ -46,7 +46,7 @@ Add a `@code` block to *Index.razor* with a list field to keep track of the avai
 }
 ```
 
-The code in the `@code` block is added to the generated class for the component. The `PizzaSpecial` type is already defined for you in the Shared project.
+The code in the `@code` block is added to the generated class for the component. The `PizzaSpecial` type is already defined for you in the **BlazingPizza.Shared** project.
 
 To get the available list of specials we need to call an API on the backend. Blazor provides a preconfigured `HttpClient` through dependency injection that is already setup with the correct base address. Use the `@inject` directive to inject an `HttpClient` into the `Index` component.
 
@@ -55,7 +55,7 @@ To get the available list of specials we need to call an API on the backend. Bla
 @inject HttpClient HttpClient
 ```
 
-The `@inject` directive essentially defines a new property on the component where the first token specified the property type and the second token specifies the property name. The property is populated for you using dependency injection.
+The `@inject` directive essentially defines a new property on the component where the first token specifies the property type and the second token specifies the property name. The property is populated for you using dependency injection.
 
 Override the `OnInitializedAsync` method in the `@code` block to retrieve the list of pizza specials. This method is part of the component lifecycle and is called when the component is initialized. Use the `GetFromJsonAsync<T>()` method to handle deserializing the response JSON:
 
@@ -70,7 +70,7 @@ Override the `OnInitializedAsync` method in the `@code` block to retrieve the li
 }
 ```
 
-The `/specials` API is defined by the `SpecialsController` in the Server project.
+The `/specials` API is defined by the `SpecialsController` in the **BlazingPizza.Server** project.
 
 Once the component is initialized it will render its markup. Replace the markup in the `Index` component with the following to list the pizza specials:
 
@@ -94,14 +94,14 @@ Once the component is initialized it will render its markup. Replace the markup 
 </div>
 ```
 
-Run the app by hitting `Ctrl-F5`. Now you should see a list of the specials available.
+Run the app by hitting `Ctrl-F5`. Now you should see a list of the specials that are available.
 
 ![image](https://user-images.githubusercontent.com/1874516/77239386-6c558880-6b97-11ea-9a14-83933146ba68.png)
 
 
 ## Create the layout
 
-Next we'll set up the layout for app. 
+Next we'll set up the layout for the app. 
 
 Layouts in Blazor are also components. They inherit from `LayoutComponentBase`, which defines a `Body` property that can be used to specify where the body of the layout should be rendered. The layout component for our pizza store app is defined in *Shared/MainLayout.razor*.
 
@@ -113,9 +113,9 @@ Layouts in Blazor are also components. They inherit from `LayoutComponentBase`, 
 </div>
 ```
 
-To see how the layout is associated with your pages, look at the `<Router>` component in `App.razor`. Notice the `DefaultLayout` parameter which determines the layout used for any page that doesn't specify its own layout directly.
+To see how the layout is associated with your pages, look at the `<Router>` component in `App.razor`. Notice that the `DefaultLayout` parameter determines the layout used for any page that doesn't specify its own layout directly.
 
-You can also override this `DefaultLayout` on a per-page basis. To do so, you can add directive such as `@layout SomeOtherLayout` at the top of any `.razor` page component. However, you don't need to do so in this application.
+You can also override this `DefaultLayout` on a per-page basis. To do so, you can add a directive such as `@layout SomeOtherLayout` at the top of any `.razor` page component. However, you will not need to do so in this application.
 
 Update the `MainLayout` component to define a top bar with a branding logo and a nav link for the home page:
 
@@ -123,7 +123,9 @@ Update the `MainLayout` component to define a top bar with a branding logo and a
 @inherits LayoutComponentBase
 
 <div class="top-bar">
-    <img class="logo" src="img/logo.svg" />
+    <a class="logo" href="">
+        <img src="img/logo.svg" />
+    </a>
 
     <NavLink href="" class="nav-tab" Match="NavLinkMatch.All">
         <img src="img/pizza-slice.svg" />
@@ -136,11 +138,11 @@ Update the `MainLayout` component to define a top bar with a branding logo and a
 </div>
 ```
 
-The `NavLink` component is provided by Blazor. Components can be used from components, which is done by specifying an element with the component's type name along with attributes for any component parameters.
+The `NavLink` component is provided by Blazor. Components can be used from components by specifying an element with the component's type name along with attributes for any component parameters.
 
 The `NavLink` component is the same as an anchor tag, except that it adds an `active` class if the current URL matches the link address. `NavLinkMatch.All` means that the link should be active only when it matches the entire current URL (not just a prefix). We'll examine the `NavLink` component in more detail in a later session.
 
-Run the app by hitting `Ctrl-F5`. With our new layout our pizza store app now looks like this:
+Run the app by hitting `Ctrl-F5`. With our new layout, our pizza store app now looks like this:
 
 ![image](https://user-images.githubusercontent.com/1874516/77239419-aa52ac80-6b97-11ea-84ae-f880db776f5c.png)
 
